@@ -1,0 +1,145 @@
+﻿<Controls:MetroWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CopyDb.Desktop"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:Custom="http://www.galasoft.ch/mvvmlight"  x:Class="CopyDb.Desktop.MainWindow"
+        BorderBrush="Black"
+        BorderThickness="1"
+        mc:Ignorable="d"
+        Title="{Binding TempoDecorrido, Mode=OneWay, StringFormat=MIGRA DB \{0:hh\\:mm\\:ss\}}" Height="768" Width="1024" DataContext="{Binding Main, Mode=OneWay, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen" Icon="migradb_icon.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="Firebird">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"><Run Text="DataSource:"/></TextBlock>
+                <TextBox Grid.Column="1" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="0,5" Text="{Binding DataSourceFirebird, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}"/>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"><Run Text="Arquivo:"/></TextBlock>
+                <Grid Grid.Column="1" Margin="0,5" Grid.Row="1" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch" Text="{Binding ArquivoFirebird, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}" />
+                    <Button Grid.Column="1" Margin="5,0" Click="Button_Click" IsEnabled="{Binding MigracaoNaoIniciada}" >
+                        <Rectangle Width="14" 
+                            Height="14" 
+                            Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_magnify}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                </Grid>
+                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"><Run Text="Usuário:"/></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0" FontWeight="Bold"><Run Text="Senha:"/></TextBlock>
+                <TextBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,5" Text="{Binding UsuarioFirebird, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}"/>
+                <PasswordBox Grid.Column="3" Grid.Row="2" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged" IsEnabled="{Binding MigracaoNaoIniciada}"/>
+                <Button Content="Testar" Grid.Row="4" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" IsEnabled="{Binding TestarConexaoFirebirdHabilitado, Mode=OneWay}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <Custom:EventToCommand Command="{Binding OnTestarConexaoFirebird}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Header="MS SQL Server">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Text="Nome Banco:" FontWeight="Bold"/>
+                <TextBox Grid.Column="1" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="0,5" Text="{Binding NomeBancoMsSql, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}"/>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Text="Endereço:" FontWeight="Bold"/>
+                <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,5" Grid.Row="1" Text="{Binding EnderecoMsSql, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}" />
+                <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"><Run Text="Usuário:"/></TextBlock>
+                <TextBlock Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0" FontWeight="Bold"><Run Text="Senha:"/></TextBlock>
+                <TextBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="0,5" Text="{Binding UsuarioMsSql, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding UsuarioESenhaMsSqlHabilitado, Mode=OneWay}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"><Run Text="Autenticação:"/></TextBlock>
+                <ComboBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5" SelectedIndex="{Binding AutenticacaoMsSql}" IsEnabled="{Binding MigracaoNaoIniciada}">
+                    <ComboBoxItem Content="Autenticação Windows" IsSelected="True"/>
+                    <ComboBoxItem Content="Usuário e Senha"/>
+                </ComboBox>
+                <PasswordBox Grid.Column="3" Grid.Row="3" VerticalAlignment="Center" IsEnabled="{Binding UsuarioESenhaMsSqlHabilitado, Mode=OneWay}" PasswordChanged="PasswordBox_PasswordChanged_1"/>
+                <Button Content="Testar" Grid.Row="4" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" IsEnabled="{Binding TestarConexaoMsSqlHabilitado, Mode=OneWay}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <Custom:EventToCommand Command="{Binding OnTestarConexaoMsSql}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </Grid>
+        </GroupBox>
+        <Button Content="Iniciar migração" Grid.Row="1" VerticalAlignment="Center" Margin="5,0" Controls:ControlsHelper.ContentCharacterCasing="Upper" IsEnabled="{Binding IniciarMigracaoHabilitado, Mode=OneWay}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <Custom:EventToCommand Command="{Binding OnIniciarMigracao}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button Content="Reorganizar índices" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="5,0" IsEnabled="{Binding ReorganizarIndicesHabilitado}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <Custom:EventToCommand Command="{Binding OnReorganizarIndices}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <GroupBox x:Name="groupBox" Header="Log" Grid.Row="2" Grid.ColumnSpan="2" Controls:ControlsHelper.ContentCharacterCasing="Upper">
+            <Grid>
+                <TextBox x:Name="txtLog" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" IsReadOnly="True"/>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="5,5">
+            <Controls:MetroProgressBar Value="{Binding RegistrosMigradosNaTabelaAtual}" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Height="30" Foreground="#FF08C556" BorderThickness="1" Maximum="{Binding TotalRegistrosNaTabelaAtual}">
+                <Controls:MetroProgressBar.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                </Controls:MetroProgressBar.BorderBrush>
+            </Controls:MetroProgressBar>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding TabelaEmMigracao}"><Run Text="Tabela"/></TextBlock>
+        </Grid>
+        <Grid Grid.Row="4" Grid.ColumnSpan="2" Margin="5,5">
+            <Controls:MetroProgressBar  Value="{Binding TabelasMigradas}"  VerticalAlignment="Stretch" Height="30" BorderThickness="1" Foreground="#FF08C556" Maximum="{Binding TotalTabelas}">
+                <Controls:MetroProgressBar.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                </Controls:MetroProgressBar.BorderBrush>
+            </Controls:MetroProgressBar>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"><Run Text="Geral"/></TextBlock>
+        </Grid>
+    </Grid>
+</Controls:MetroWindow>
