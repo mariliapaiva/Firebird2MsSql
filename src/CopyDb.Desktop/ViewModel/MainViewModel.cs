@@ -24,6 +24,7 @@ namespace CopyDb.Desktop.ViewModel
         private static readonly KeyValueConfigurationCollection Settings = Configuration.AppSettings.Settings;
         private const int AUTENTICACAO_WINDOWS = 0;
         private const int AUTENTICACA_USUARIO_SENHA = 1;
+        private Migrador migrador;
 
         public MainViewModel(IDialogService dialogService)
         {
@@ -111,7 +112,7 @@ namespace CopyDb.Desktop.ViewModel
 
         private void ExecutaMigracao()
         {
-            MigracaoNaoIniciada = false;
+            ReorganizarIndicesHabilitado = MigracaoNaoIniciada = false;
             LogaMensagem?.Invoke("Iniciando migração");
             Stopwatch stopwatch;
             using (var conexaoFonte = new FbConnection(ConnectionStringFonte))
@@ -120,7 +121,7 @@ namespace CopyDb.Desktop.ViewModel
                 conexaoFonte.Open();
                 conexaoDestino.Open();
 
-                var migrador = new Migrador(new ExtratorMetadadosTabelaFirebird(conexaoFonte), new ExtratorMetadadosTabelaMsSqlServer(conexaoDestino));
+                migrador = new Migrador(new ExtratorMetadadosTabelaFirebird(conexaoFonte), new ExtratorMetadadosTabelaMsSqlServer(conexaoDestino));
 
                 migrador.OnMessage += LogaMensagem;
                 migrador.OnError += message => LogaMensagem?.Invoke($"Erro na migração da tabela {TabelaEmMigracao}: {message}");
@@ -134,8 +135,9 @@ namespace CopyDb.Desktop.ViewModel
                 migrador.Migrar(conexaoFonte, conexaoDestino);
                 stopwatch.Stop();
             }
-            LogaMensagem?.Invoke($"Cópia realizada em {stopwatch.Elapsed}");
+            LogaMensagem?.Invoke($"Migração realizada em {stopwatch.Elapsed}");
             _cancellationTokenSource.Cancel();
+            ReorganizarIndicesHabilitado = true;
         }
 
         private void AtualizaTempoDecorrido(Stopwatch stopwatch)
@@ -160,7 +162,7 @@ namespace CopyDb.Desktop.ViewModel
         private void Migrador_OnRegistrosMigrados(long registrosMigrados)
         {
             RegistrosMigradosNaTabelaAtual = registrosMigrados;
-            LogaMensagem?.Invoke($"Copiado {registrosMigrados:N0}/{TotalRegistrosNaTabelaAtual:N0} linhas da tabela {TabelaEmMigracao}");
+            LogaMensagem?.Invoke($"Migrado {registrosMigrados:N0}/{TotalRegistrosNaTabelaAtual:N0} linhas da tabela {TabelaEmMigracao}");
         }
 
         private void Migrador_OnInicioMigracaoTabela(string tabela, int totalRegistros)
@@ -175,7 +177,11 @@ namespace CopyDb.Desktop.ViewModel
 
         private void ReorganizarIndices()
         {
-            throw new NotImplementedException();
+            using (var conexaoDestino = new SqlConnection(ConnectionStringDestino))
+            {
+                conexaoDestino.Open();
+                migrador.ReorganizarIndice(conexaoDestino);
+            }
         }
 
         private void TestarConexaoFirebird()
@@ -224,7 +230,7 @@ namespace CopyDb.Desktop.ViewModel
             }
             catch
             {
-                _dialogService.ShowMessage($"Não foi possível se conectar com o {db}.");
+                _dialogService.ShowMessage($"Não foi possível conectar com o {db}.");
             }
             return false;
         }

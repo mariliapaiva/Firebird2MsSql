@@ -9,7 +9,7 @@
         BorderBrush="Black"
         BorderThickness="1"
         mc:Ignorable="d"
-        Title="{Binding TempoDecorrido, Mode=OneWay, StringFormat=MIGRA DB \{0:hh\\:mm\\:ss\}}" Height="768" Width="1024" DataContext="{Binding Main, Mode=OneWay, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen" Icon="migradb_icon.ico">
+        Title="{Binding TempoDecorrido, Mode=OneWay, StringFormat=MIGRA DB \{0:c\}}" Height="768" Width="1024" DataContext="{Binding Main, Mode=OneWay, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen" Icon="migradb_icon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -25,10 +25,10 @@
         <GroupBox Header="Firebird">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="84"/>
+                    <ColumnDefinition Width="98*"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="103*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -37,10 +37,10 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"><Run Text="DataSource:"/></TextBlock>
-                <TextBox Grid.Column="1" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="0,5" Text="{Binding DataSourceFirebird, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}"/>
-                <TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"><Run Text="Arquivo:"/></TextBlock>
-                <Grid Grid.Column="1" Margin="0,5" Grid.Row="1" Grid.ColumnSpan="3">
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,10,3,10" FontWeight="Bold" Height="16" Width="81"><Run Text="Endereç"/><Run Text="o/"/><Run Text="IP"/><Run Text=":"/><LineBreak/><Run/></TextBlock>
+                <TextBox Grid.Column="1" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="2,5,-0.4,5" Text="{Binding DataSourceFirebird, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}" Height="26"/>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,10,3,10.8" FontWeight="Bold" Height="16" Width="58"><Run Text="Arquivo:"/></TextBlock>
+                <Grid Grid.Column="1" Margin="2,5,-0.4,4.8" Grid.Row="1" Grid.ColumnSpan="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -56,11 +56,11 @@
                         </Rectangle>
                     </Button>
                 </Grid>
-                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"><Run Text="Usuário:"/></TextBlock>
-                <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0" FontWeight="Bold"><Run Text="Senha:"/></TextBlock>
-                <TextBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,5" Text="{Binding UsuarioFirebird, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}"/>
-                <PasswordBox Grid.Column="3" Grid.Row="2" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged" IsEnabled="{Binding MigracaoNaoIniciada}"/>
-                <Button Content="Testar" Grid.Row="4" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" IsEnabled="{Binding TestarConexaoFirebirdHabilitado, Mode=OneWay}">
+                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,10.2,3,9.8" FontWeight="Bold" Height="16" Width="58"><Run Text="Usuário:"/></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,10.2,5,9.8" FontWeight="Bold" Height="16" Width="37"><Run Text="Senha:"/></TextBlock>
+                <TextBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="2,5.2,0,4.8" Text="{Binding UsuarioFirebird, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding MigracaoNaoIniciada}" Height="26"/>
+                <PasswordBox Grid.Column="3" Grid.Row="2" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged" IsEnabled="{Binding MigracaoNaoIniciada}" Height="26" Margin="4,5.2,-0.4,4.8"/>
+                <Button Content="Testar" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="127,5,24,5" IsEnabled="{Binding TestarConexaoFirebirdHabilitado, Mode=OneWay}" Grid.Column="1" Height="26" Width="45">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <Custom:EventToCommand Command="{Binding OnTestarConexaoFirebird}"/>

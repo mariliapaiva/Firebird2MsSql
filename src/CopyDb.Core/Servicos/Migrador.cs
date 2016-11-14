@@ -162,5 +162,25 @@ namespace CopyDb.Core.Servicos
 
             return datatable;
         }
+
+        public void ReorganizarIndice(SqlConnection conexaoDestino)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            try
+            {
+                var command = conexaoDestino.CreateCommand();
+
+                OnMessage?.Invoke("Reorganizando Índices");
+                command.CommandText = "EXEC sp_msforeachtable 'ALTER INDEX ALL ON ? REBUILD WITH (FILLFACTOR = 80)'";
+                command.ExecuteNonQuery();
+                stopwatch.Stop();
+                OnMessage?.Invoke($"Reorganização concluída com sucesso em {stopwatch.Elapsed}");
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                OnError?.Invoke(ex.Message);
+            }
+        }
     }
 }
